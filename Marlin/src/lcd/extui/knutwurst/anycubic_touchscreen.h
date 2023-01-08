@@ -145,6 +145,10 @@ char *itostr2(const uint8_t &x);
   #define SM_BLTZ_DN_S          "<DNOFFZ0>"
   #define SM_BLTZ_EXIT_L        "<SAVE and EXIT>"
   #define SM_BLTZ_EXIT_S        "<EXTABLM>"
+
+  //ANVA 2023010811
+  #define SM_AUTO_Z_ALIGN_L     "<Auto Z-Align>"
+  #define SM_AUTO_Z_ALIGN_S     "<Z-ALIGN>"
 #endif // !KNUTWURST_DGUS2_TFT
 
 #if ENABLED(KNUTWURST_DGUS2_TFT)

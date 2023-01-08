@@ -866,7 +866,10 @@
   // #define INVERT_Z2_VS_Z_DIR        // Z2 direction signal is the opposite of Z
 
   #if DISABLED(KNUTWURST_ONE_Z_ENDSTOP)
-    #define Z_MULTI_ENDSTOPS          // Other Z axes have their own endstops
+    //ANVA 20230108 Disable multiple endstops in Mega S when Z-home with BlTouch and G34 is enabled
+    #if DISABLED(USE_PROBE_FOR_Z_HOMING)
+      #define Z_MULTI_ENDSTOPS          // Other Z axes have their own endstops
+    #endif
   #endif
   #if ENABLED(Z_MULTI_ENDSTOPS)
     #define Z2_USE_ENDSTOP   _XMAX_   // Z2 endstop board plug. Don't forget to enable USE_*_PLUG.
@@ -1002,7 +1005,8 @@
  * Z Steppers Auto-Alignment
  * Add the G34 command to align multiple Z steppers using a bed probe.
  */
-// #define Z_STEPPER_AUTO_ALIGN
+//ANVA 20230108
+#define Z_STEPPER_AUTO_ALIGN
 #if ENABLED(Z_STEPPER_AUTO_ALIGN)
   /**
    * Define probe X and Y positions for Z1, Z2 [, Z3 [, Z4]]

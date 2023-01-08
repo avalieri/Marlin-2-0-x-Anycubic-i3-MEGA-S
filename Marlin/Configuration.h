@@ -107,7 +107,8 @@
  *
  * These settings are required and not set by PlatformIO.
  */
-#define KNUTWURST_PRHEAT_NOZZLE_PLA 200
+//ANVA 20220108 Changed PLA temp
+#define KNUTWURST_PRHEAT_NOZZLE_PLA 190
 #define KNUTWURST_PRHEAT_BED_PLA     60
 #define KNUTWURST_PRHEAT_NOZZLE_ABS 240
 #define KNUTWURST_PRHEAT_BED_ABS     90
@@ -136,7 +137,8 @@
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(knutwurst)" // Who made the changes.
+//ANVA 20230108
+#define STRING_CONFIG_H_AUTHOR "(anva-TB10-knutwurst)" // Who made the changes.
 // #define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 /**
@@ -785,9 +787,10 @@
   // Set/get with G-code: M301 E[extruder number, 0-2]
 
   #if ANY(KNUTWURST_MEGA, KNUTWURST_MEGA_S, KNUTWURST_MEGA_P)
-    #define  DEFAULT_Kp 12.28
-    #define  DEFAULT_Ki  0.75
-    #define  DEFAULT_Kd 50.06
+    //ANVA 20230108
+    #define  DEFAULT_Kp 15.09
+    #define  DEFAULT_Ki  0.91
+    #define  DEFAULT_Kd 62.66
   #endif
 
   #if ENABLED(KNUTWURST_MEGA_X)
@@ -888,9 +891,10 @@
   // #define PID_BED_DEBUG // Print Bed PID debug data to the serial port.
 
   #if ANY(KNUTWURST_MEGA, KNUTWURST_MEGA_S, KNUTWURST_MEGA_P)
-    #define DEFAULT_bedKp 251.78
-    #define DEFAULT_bedKi  49.57
-    #define DEFAULT_bedKd 319.73
+    //ANVA 20230108
+    #define DEFAULT_bedKp 274.35
+    #define DEFAULT_bedKi  51.52
+    #define DEFAULT_bedKd 365.23
   #endif
 
   #if ENABLED(KNUTWURST_MEGA_X)
@@ -1384,7 +1388,8 @@
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_S)
-  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400, 393 }
+  //ANVA 20230108
+  #define DEFAULT_AXIS_STEPS_PER_UNIT   { 80.69, 80.69, 399.62, 394.59 }
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_X)
@@ -1417,7 +1422,8 @@
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_S)
-  #define DEFAULT_MAX_FEEDRATE          { 500, 500, 6, 40 } // same feedrate for BMG
+  //ANVA 20230108
+  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 8, 60 } // Mod by ANVA  // same feedrate for BMG
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_X)
@@ -1457,7 +1463,8 @@
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
 #if ANY(KNUTWURST_MEGA, KNUTWURST_MEGA_S, KNUTWURST_MEGA_P)
-  #define DEFAULT_MAX_ACCELERATION      { 3000, 2000,  60, 10000 }
+  //ANVA 20230108
+  #define DEFAULT_MAX_ACCELERATION      { 1000, 1000,  200, 5000 }
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_X)
@@ -1500,9 +1507,10 @@
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_S)
-  #define DEFAULT_ACCELERATION          1500    // X, Y, Z and E acceleration for printing moves
-  #define DEFAULT_RETRACT_ACCELERATION  1500    // E acceleration for retracts
-  #define DEFAULT_TRAVEL_ACCELERATION   3000    // X, Y, Z acceleration for travel (non printing) moves
+  //ANVA 20230108
+  #define DEFAULT_ACCELERATION          1250    // X, Y, Z and E acceleration for printing moves
+  #define DEFAULT_RETRACT_ACCELERATION  1250    // E acceleration for retracts
+  #define DEFAULT_TRAVEL_ACCELERATION   1250    // X, Y, Z acceleration for travel (non printing) moves
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_X)
@@ -1540,6 +1548,7 @@
 #define CLASSIC_JERK
 #if ENABLED(CLASSIC_JERK)
   #if ANY(KNUTWURST_MEGA, KNUTWURST_MEGA_S, KNUTWURST_MEGA_P)
+    //ANVA 20230108
     #define DEFAULT_XJERK  8.0
     #define DEFAULT_YJERK  8.0
     #define DEFAULT_ZJERK  0.4
@@ -1572,6 +1581,7 @@
   #endif
 #endif
 
+//ANVA 20230108 Fixed to 10 as per SanityCheck.h error: 'It is strongly recommended to set DEFAULT_EJERK >= 10 when using LIN_ADVANCE. Enable ALLOW_LOW_EJERK to bypass this alert (e.g., for direct drive).'
 #define DEFAULT_EJERK    10.0  // May be used by Linear Advance
 
 /**
@@ -1631,7 +1641,8 @@
 #endif
 
 // Force the use of the probe for Z-axis homing
-// #define USE_PROBE_FOR_Z_HOMING
+//ANVA 20230108
+#define USE_PROBE_FOR_Z_HOMING
 
 /**
  * Z_MIN_PROBE_PIN
@@ -1844,7 +1855,9 @@
  *     O-- FRONT --+
  */
 #if ENABLED(KNUTWURST_BLTOUCH)
-  #define NOZZLE_TO_PROBE_OFFSET { -2, -25, -0.4 } // https://www.thingiverse.com/thing:2824005
+  //ANVA 20230108
+  #define NOZZLE_TO_PROBE_OFFSET { 29, -15, 0 } // https://www.thingiverse.com/thing:3537449
+  // #define NOZZLE_TO_PROBE_OFFSET { -2, -25, -0.4 } // https://www.thingiverse.com/thing:2824005
   // #define NOZZLE_TO_PROBE_OFFSET { 29, -15, 0 } //X-Carriage
 #endif
 
@@ -1920,7 +1933,8 @@
  * A total of 2 does fast/slow probes with a weighted average.
  * A total of 3 or more adds more slow probes, taking the average.
  */
-// #define MULTIPLE_PROBING 2
+//ANVA 20230108
+#define MULTIPLE_PROBING 2
 // #define EXTRA_PROBING    1
 
 /**
@@ -2574,7 +2588,7 @@
 #if EITHER(AUTO_BED_LEVELING_LINEAR, AUTO_BED_LEVELING_BILINEAR)
 
   // Set the number of grid points per dimension.
-  #define GRID_MAX_POINTS_X 5
+  #define GRID_MAX_POINTS_X 4
   #define GRID_MAX_POINTS_Y GRID_MAX_POINTS_X
 
   // Probe along the Y axis, advancing X after each column
@@ -2720,6 +2734,8 @@
 #if BOTH(KNUTWURST_BLTOUCH, KNUTWURST_4MAXP2)
   #define Z_SAFE_HOMING
 #endif
+//ANVA 20230108 Z_SAFE_HOMIN Set as BLTouch home and G34 enabled
+#define Z_SAFE_HOMING
 
 
 #if ENABLED(Z_SAFE_HOMING)
@@ -2854,14 +2870,14 @@
 // Preheat Constants - Up to 10 are supported without changes
 //
 #define PREHEAT_1_LABEL       "PLA"
-#define PREHEAT_1_TEMP_HOTEND 180
-#define PREHEAT_1_TEMP_BED     70
+#define PREHEAT_1_TEMP_HOTEND 190
+#define PREHEAT_1_TEMP_BED     60
 // #define PREHEAT_1_TEMP_CHAMBER 35
 #define PREHEAT_1_FAN_SPEED     0 // Value from 0 to 255
 
 #define PREHEAT_2_LABEL       "ABS"
 #define PREHEAT_2_TEMP_HOTEND 240
-#define PREHEAT_2_TEMP_BED    110
+#define PREHEAT_2_TEMP_BED     90
 // #define PREHEAT_2_TEMP_CHAMBER 35
 #define PREHEAT_2_FAN_SPEED     0 // Value from 0 to 255
 

@@ -924,6 +924,15 @@
         LevelMenu = false;
         queue.inject_P(PSTR("G90\nG1 Z10\nG1 X15 Y15 F4000\nM420 S1"));
       }
+      //ANVA 20230108
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_AUTO_Z_ALIGN_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_AUTO_Z_ALIGN_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Auto Z-Align");
+          queue.inject_P(PSTR("G90\nG34"));
+        BUZZ(105, 1108);
+        BUZZ(105, 1108);
+      }
     #endif // if ENABLED(KNUTWURST_SPECIAL_MENU)
   }
 
@@ -1102,6 +1111,9 @@
             break;
 
           case 12: // Page 3
+            //ANVA 20230108 G34 from touch screen
+            SENDLINE_PGM(SM_AUTO_Z_ALIGN_S);            
+            SENDLINE_PGM(SM_AUTO_Z_ALIGN_L);            
             SENDLINE_PGM(SM_EXIT_S);
             SENDLINE_PGM(SM_EXIT_L);
             break;
