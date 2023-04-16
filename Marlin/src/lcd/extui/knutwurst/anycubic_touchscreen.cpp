@@ -933,7 +933,7 @@
         SERIAL_ECHOLNPGM("Special Menu: Auto Z-Align");
         queue.inject_P(PSTR("G90\nG34"));
         BUZZ(105, 1108);
-        BUZZ(105, 1108);
+        BUZZ(210, 1661);
       }
       else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_SET_Z_OFF_L)) != NULL)
                || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_SET_Z_OFF_S)) != NULL)
@@ -989,6 +989,8 @@
         sprintf(sLocZCommand, "M206 Z %s\nM500", sLocZPos);
         ////DEBUG! SERIAL_ECHOLNPGM("--->", sLocZCommand, "<---");
         queue.inject(sLocZCommand);
+          BUZZ(105, 1108);
+          BUZZ(210, 1661);
       }
       else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_EXIT_L)) != NULL)
                || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_EXIT_S)) != NULL)
