@@ -146,9 +146,31 @@ char *itostr2(const uint8_t &x);
   #define SM_BLTZ_EXIT_L        "<SAVE and EXIT>"
   #define SM_BLTZ_EXIT_S        "<EXTABLM>"
 
-  //ANVA 2023010811
+  //ANVA 20230108
   #define SM_AUTO_Z_ALIGN_L     "<Auto Z-Align>"
   #define SM_AUTO_Z_ALIGN_S     "<Z-ALIGN>"
+  #define SM_SET_Z_OFF_L        "<Set Z-offset>"
+  #define SM_SET_Z_OFF_S        "<SETZOFF>"
+  #define SM_ZOFF_ACT_L         "<Z is XXXXX>"
+  #define SM_ZOFF_ACT_S         "<ZOFFACT>"
+  #define SM_ZOFF_RESET_L       "<Reset Offset>"
+  #define SM_ZOFF_RESET_S       "<ZORESET>"
+  #define SM_ZOFF_UP01_L        "<Z Off Up 0.1>"
+  #define SM_ZOFF_UP01_S        "<ZOU01>"
+  #define SM_ZOFF_DN01_L        "<Z Off Down 0.1>"
+  #define SM_ZOFF_DN01_S        "<ZOD01>"
+  #define SM_ZOFF_UP002_L       "<Z Off Up 0.02>"
+  #define SM_ZOFF_UP002_S       "<ZOU002>"
+  #define SM_ZOFF_DN002_L       "<Z Off Down 0.02>"
+  #define SM_ZOFF_DN002_S       "<ZOD002>"
+  #define SM_ZOFF_SAVE_L        "<Save Z offset>"
+  #define SM_ZOFF_SAVE_S        "<ZOFFSAV>"
+  #define SM_ZOFF_EXIT_L        "<Exit Z offset>"
+  #define SM_ZOFF_EXIT_S        "<ZOFFEXIT>"
+  #define SM_BLT_RESET_L        "<Reset BLTouch>"
+  #define SM_BLT_RESET_S        "<RESBLT>"
+  //END ANVA 20230108
+
 #endif // !KNUTWURST_DGUS2_TFT
 
 #if ENABLED(KNUTWURST_DGUS2_TFT)
@@ -342,6 +364,9 @@ uint8_t MMLMenu     = false;
 uint8_t FlowMenu    = false;
 uint8_t BLTouchMenu = false;
 uint8_t LevelMenu   = false;
+//ANVA 20230415
+uint8_t ZOffsetMenu = false;
+//END ANVA 20230415
 uint8_t CaseLight   = true;
 
 #if ENABLED(ANYCUBIC_FILAMENT_RUNOUT_SENSOR)

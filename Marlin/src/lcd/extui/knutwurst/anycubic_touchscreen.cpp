@@ -241,6 +241,8 @@
     BLTouchMenu                    = false;
     LevelMenu                      = false;
     CaseLight                      = false;
+    //ANVA 20330415
+    ZOffsetMenu                    = false;
     FilamentSensorEnabled          = true;
     MyFileNrCnt                    = 0;
     currentFlowRate                = 100;
@@ -924,15 +926,84 @@
         LevelMenu = false;
         queue.inject_P(PSTR("G90\nG1 Z10\nG1 X15 Y15 F4000\nM420 S1"));
       }
-      //ANVA 20230108
+      //ANVA 20230415
       else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_AUTO_Z_ALIGN_L)) != NULL)
                || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_AUTO_Z_ALIGN_S)) != NULL)
                ) {
         SERIAL_ECHOLNPGM("Special Menu: Auto Z-Align");
-          queue.inject_P(PSTR("G90\nG34"));
+        queue.inject_P(PSTR("G90\nG34"));
         BUZZ(105, 1108);
         BUZZ(105, 1108);
       }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_SET_Z_OFF_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_SET_Z_OFF_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Enter Z Offset Menu");
+        ZOffsetMenu = true;
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_ACT_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_ACT_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Get act Z value (only view)");
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_RESET_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_RESET_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Reset ZOffset and move to center of the bed");
+        queue.inject_P(PSTR("M206 Z0\nG28\nG90\nG1 X107 Y107 F4000\nG1 Z0"));
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_UP01_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_UP01_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Z Offset UP 0.1");
+        queue.inject_P(PSTR("G91\nM211 S0\nG1 Z+0.1\nM211 S1\nG90"));
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_DN01_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_DN01_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Z Offset DOWN 0.1");
+        queue.inject_P(PSTR("G91\nM211 S0\nG1 Z-0.1\nM211 S1\nG90"));
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_UP002_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_UP002_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Z Offset UP 0.02");
+        queue.inject_P(PSTR("G91\nM211 S0\nG1 Z+0.02\nM211 S1\nG90"));
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_DN002_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_DN002_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Z Offset DOWN 0.02");
+        queue.inject_P(PSTR("G91\nM211 S0\nG1 Z-0.02\nM211 S1\nG90"));
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_SAVE_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_SAVE_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Z Offset Save");
+
+        float fLocZPos = current_position.z;
+        fLocZPos = fLocZPos * (-1.0F);
+        char sLocZCommand[40];
+        char sLocZPos[12];
+        dtostrf(fLocZPos,6,2,sLocZPos);
+        sprintf(sLocZCommand, "M206 Z %s\nM500", sLocZPos);
+        ////DEBUG! SERIAL_ECHOLNPGM("--->", sLocZCommand, "<---");
+        queue.inject(sLocZCommand);
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_EXIT_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_EXIT_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Exit Z Offset Menu");
+        queue.inject_P(PSTR("G90\nG1 Z20 F4000"));
+        ZOffsetMenu = false;
+      }
+      else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_BLT_RESET_L)) != NULL)
+               || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_BLT_RESET_S)) != NULL)
+               ) {
+        SERIAL_ECHOLNPGM("Special Menu: Reset BL-Touch");
+        queue.inject_P(PSTR("M280 P0 S160"));
+      }
+      //END ANVA 20230415
     #endif // if ENABLED(KNUTWURST_SPECIAL_MENU)
   }
 
@@ -1047,6 +1118,45 @@
             break;
         }
       }
+      //ANVA 20230415
+      else if (ZOffsetMenu) {
+        zOffsetBuffer = SM_ZOFF_ACT_L;
+
+        #ifdef ANYCUBIC_TFT_DEBUG
+          SERIAL_ECHOPGM("DEBUG: Current probe.offset.z: ", float(probe.offset.z));
+          SERIAL_EOL();
+        #endif
+        
+        zOffsetBuffer.replace("XXXXX", String(float(current_position.z)));
+
+        switch (filenumber) {
+          case 0: // Page 1
+            SENDLINE_PGM(SM_ZOFF_RESET_S);
+            SENDLINE_PGM(SM_ZOFF_RESET_L);
+            SENDLINE_PGM(SM_ZOFF_UP01_S);
+            SENDLINE_PGM(SM_ZOFF_UP01_L);
+            SENDLINE_PGM(SM_ZOFF_DN01_S);
+            SENDLINE_PGM(SM_ZOFF_DN01_L);
+            SENDLINE_PGM(SM_ZOFF_UP002_S);
+            SENDLINE_PGM(SM_ZOFF_UP002_L);
+            break;
+
+          case 4: // Page 2
+            SENDLINE_PGM(SM_ZOFF_DN002_S);
+            SENDLINE_PGM(SM_ZOFF_DN002_L);
+            SENDLINE_PGM(SM_ZOFF_ACT_S);
+            SENDLINE(zOffsetBuffer.c_str());
+            SENDLINE_PGM(SM_ZOFF_SAVE_S);
+            SENDLINE_PGM(SM_ZOFF_SAVE_L);
+            SENDLINE_PGM(SM_ZOFF_EXIT_S);
+            SENDLINE_PGM(SM_ZOFF_EXIT_L);
+            break;
+
+          default:
+            break;
+        }
+      }
+      //END ANVA 20230515
       else if (SpecialMenu) {
         switch (filenumber) {
           case 0: // Page 1
@@ -1112,8 +1222,13 @@
 
           case 12: // Page 3
             //ANVA 20230108 G34 from touch screen
-            SENDLINE_PGM(SM_AUTO_Z_ALIGN_S);            
-            SENDLINE_PGM(SM_AUTO_Z_ALIGN_L);            
+            SENDLINE_PGM(SM_AUTO_Z_ALIGN_S);
+            SENDLINE_PGM(SM_AUTO_Z_ALIGN_L);
+            SENDLINE_PGM(SM_SET_Z_OFF_S);
+            SENDLINE_PGM(SM_SET_Z_OFF_L);
+            SENDLINE_PGM(SM_BLT_RESET_S);
+            SENDLINE_PGM(SM_BLT_RESET_L);
+            //END ANVA
             SENDLINE_PGM(SM_EXIT_S);
             SENDLINE_PGM(SM_EXIT_L);
             break;
