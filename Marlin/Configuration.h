@@ -1423,7 +1423,7 @@
 
 #if ENABLED(KNUTWURST_MEGA_S)
   //ANVA 20230108
-  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 8, 60 } // Mod by ANVA  // same feedrate for BMG
+  #define DEFAULT_MAX_FEEDRATE          { 200, 200, 8, 40 } // Mod by ANVA  // same feedrate for BMG
 #endif
 
 #if ENABLED(KNUTWURST_MEGA_X)

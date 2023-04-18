@@ -950,7 +950,7 @@
                || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_RESET_S)) != NULL)
                ) {
         SERIAL_ECHOLNPGM("Special Menu: Reset ZOffset and move to center of the bed");
-        queue.inject_P(PSTR("M206 Z0\nG28\nG90\nG1 X107 Y107 F4000\nG1 Z0"));
+        queue.inject_P(PSTR("M851 Z0\nG28\nG90\nG1 X107 Y107 F4000\nG1 Z0"));
       }
       else if ((strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_UP01_L)) != NULL)
                || (strcasestr_P(currentTouchscreenSelection, PSTR(SM_ZOFF_UP01_S)) != NULL)
@@ -986,7 +986,7 @@
         char sLocZCommand[40];
         char sLocZPos[12];
         dtostrf(fLocZPos,6,2,sLocZPos);
-        sprintf(sLocZCommand, "M206 Z %s\nM500", sLocZPos);
+        sprintf(sLocZCommand, "M851 Z %s\nM500", sLocZPos);
         ////DEBUG! SERIAL_ECHOLNPGM("--->", sLocZCommand, "<---");
         queue.inject(sLocZCommand);
           BUZZ(105, 1108);
